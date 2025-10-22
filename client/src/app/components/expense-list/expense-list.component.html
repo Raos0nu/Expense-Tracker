@@ -1,0 +1,40 @@
+<div class="card">
+  <h2>Recent Expenses</h2>
+  
+  <div *ngIf="expenses.length === 0" class="empty-state">
+    <p>No expenses yet. Add your first expense to get started!</p>
+  </div>
+
+  <div class="expense-list" *ngIf="expenses.length > 0">
+    <div class="expense-item" *ngFor="let expense of expenses">
+      <div class="expense-header">
+        <div class="expense-title-section">
+          <h3>{{ expense.title }}</h3>
+          <span 
+            class="category-badge" 
+            [style.background-color]="getCategoryColor(expense.category)">
+            {{ expense.category }}
+          </span>
+        </div>
+        <div class="expense-amount">${{ expense.amount.toFixed(2) }}</div>
+      </div>
+      
+      <div class="expense-details">
+        <p class="expense-date">{{ formatDate(expense.date) }}</p>
+        <p class="expense-description" *ngIf="expense.description">
+          {{ expense.description }}
+        </p>
+      </div>
+      
+      <div class="expense-actions">
+        <button class="btn btn-secondary btn-sm" (click)="editExpense(expense)">
+          Edit
+        </button>
+        <button class="btn btn-danger btn-sm" (click)="deleteExpense(expense._id)">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

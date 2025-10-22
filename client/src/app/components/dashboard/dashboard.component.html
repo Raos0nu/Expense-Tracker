@@ -1,0 +1,50 @@
+<div class="dashboard">
+  <!-- Stats Section -->
+  <div class="stats-container">
+    <div class="stat-card">
+      <h3>Total Expenses</h3>
+      <p class="stat-value">${{ totalExpenses.toFixed(2) }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Total Transactions</h3>
+      <p class="stat-value">{{ expenses.length }}</p>
+    </div>
+  </div>
+
+  <!-- Category Stats -->
+  <div class="card" *ngIf="categoryStats.length > 0">
+    <h2>Expenses by Category</h2>
+    <div class="category-stats">
+      <div class="category-item" *ngFor="let stat of categoryStats">
+        <div class="category-info">
+          <span class="category-name">{{ stat._id }}</span>
+          <span class="category-count">({{ stat.count }} transactions)</span>
+        </div>
+        <span class="category-amount">${{ stat.total.toFixed(2) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Expense Button -->
+  <div class="card text-center" *ngIf="!showForm">
+    <button class="btn btn-primary" (click)="onAddExpense()">
+      + Add New Expense
+    </button>
+  </div>
+
+  <!-- Expense Form -->
+  <app-expense-form 
+    *ngIf="showForm"
+    [expense]="editingExpense"
+    (onSave)="onExpenseSaved()"
+    (onCancel)="onFormCancel()">
+  </app-expense-form>
+
+  <!-- Expense List -->
+  <app-expense-list 
+    [expenses]="expenses"
+    (onEdit)="onEditExpense($event)"
+    (onDelete)="onDeleteExpense($event)">
+  </app-expense-list>
+</div>
+

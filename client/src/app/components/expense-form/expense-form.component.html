@@ -1,0 +1,71 @@
+<div class="card">
+  <h2>{{ isEditing ? 'Edit Expense' : 'Add New Expense' }}</h2>
+  
+  <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="title">Title *</label>
+      <input 
+        type="text" 
+        id="title" 
+        class="form-control" 
+        formControlName="title"
+        placeholder="e.g., Grocery Shopping">
+      <small class="error" *ngIf="expenseForm.get('title')?.invalid && expenseForm.get('title')?.touched">
+        Title is required
+      </small>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="amount">Amount ($) *</label>
+        <input 
+          type="number" 
+          id="amount" 
+          class="form-control" 
+          formControlName="amount"
+          step="0.01"
+          min="0"
+          placeholder="0.00">
+        <small class="error" *ngIf="expenseForm.get('amount')?.invalid && expenseForm.get('amount')?.touched">
+          Please enter a valid amount
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category *</label>
+        <select id="category" class="form-control" formControlName="category">
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="date">Date *</label>
+      <input 
+        type="date" 
+        id="date" 
+        class="form-control" 
+        formControlName="date">
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description (Optional)</label>
+      <textarea 
+        id="description" 
+        class="form-control" 
+        formControlName="description"
+        rows="3"
+        placeholder="Add any additional details..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-success" [disabled]="!expenseForm.valid">
+        {{ isEditing ? 'Update Expense' : 'Add Expense' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="cancel()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+
