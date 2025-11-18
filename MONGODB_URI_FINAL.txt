@@ -1,8 +1,0 @@
-CORRECT MONGODB URI FOR VERCEL:
-
-Key: MONGODB_URI
-
-Value: mongodb+srv://sonuyadav97297_db_user:JJJQXnn%40131720sonuuu131720@cluster0.ucp3zqa.mongodb.net/expense-tracker?retryWrites=true&w=majority&appName=Cluster0
-
-Note: @ in password is encoded as %40
-

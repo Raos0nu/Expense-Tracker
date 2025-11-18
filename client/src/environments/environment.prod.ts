@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  // Using relative URL for Vercel serverless functions
-  apiUrl: '/api/expenses'
+  // Update this with your backend URL when deploying
+  apiUrl: 'http://localhost:3000/api/expenses'
 };
