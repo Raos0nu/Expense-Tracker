@@ -24,7 +24,6 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // Connect to database
     await connectDB();
 
     // GET single expense
@@ -64,7 +63,6 @@ module.exports = async (req, res) => {
       return res.status(200).json({ message: 'Expense deleted successfully' });
     }
 
-    // Method not allowed
     res.status(405).json({ message: `Method ${req.method} not allowed` });
   } catch (error) {
     console.error('API Error:', error);

@@ -1,8 +1,8 @@
-# Expense Tracker - MEAN Stack Application
+# 💰 Expense Tracker - MEAN Stack Application
 
-A full-stack expense tracking application built with MongoDB, Express.js, Angular, and Node.js (MEAN stack).
+A full-stack expense tracking application built with MongoDB, Express.js, Angular, and Node.js (MEAN stack). Fully configured for Vercel deployment.
 
-## Features
+## ✨ Features
 
 - ✨ Add, edit, and delete expenses
 - 📊 View total expenses and transaction counts
@@ -10,254 +10,210 @@ A full-stack expense tracking application built with MongoDB, Express.js, Angula
 - 📈 Category-wise expense statistics
 - 🎨 Modern and responsive UI
 - 💾 MongoDB database for data persistence
+- 🚀 Fully deployed on Vercel (Frontend + Backend)
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 ### Backend
 - **Node.js** - JavaScript runtime
 - **Express.js** - Web application framework
-- **MongoDB** - NoSQL database
+- **MongoDB Atlas** - Cloud NoSQL database
 - **Mongoose** - MongoDB object modeling
+- **Vercel Serverless Functions** - API endpoints
 
 ### Frontend
 - **Angular** - Frontend framework
 - **TypeScript** - Programming language
 - **RxJS** - Reactive programming library
 
-## Prerequisites
+## 🚀 Quick Start (Local Development)
 
-Before running this application, make sure you have the following installed:
+### Prerequisites
+- Node.js (v18 or higher)
+- MongoDB Atlas account (free tier available)
+- Angular CLI (v16 or higher)
 
-- [Node.js](https://nodejs.org/) (v14 or higher)
-- [MongoDB](https://www.mongodb.com/try/download/community) (v4.4 or higher)
-- [Angular CLI](https://angular.io/cli) (v16 or higher)
+### Installation
 
-## Installation
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Raos0nu/Expense-Tracker.git
+   cd Expense-Tracker
+   ```
 
-### 1. Clone the repository or navigate to the project directory
+2. **Install backend dependencies**
+   ```bash
+   npm install
+   ```
 
-```bash
-cd "D:\Projects\Expenses tracker"
-```
+3. **Install frontend dependencies**
+   ```bash
+   cd client
+   npm install
+   cd ..
+   ```
 
-### 2. Install Backend Dependencies
+4. **Configure environment variables**
+   - Create `.env` file in root directory
+   - Add:
+     ```
+     PORT=3000
+     MONGODB_URI=your_mongodb_connection_string
+     ```
 
-```bash
-npm install
-```
+5. **Start backend server**
+   ```bash
+   npm run dev
+   ```
+   Backend runs on: `http://localhost:3000`
 
-### 3. Install Frontend Dependencies
+6. **Start frontend (new terminal)**
+   ```bash
+   cd client
+   npm start
+   ```
+   Frontend runs on: `http://localhost:4200`
 
-```bash
-cd client
-npm install
-cd ..
-```
+## 🌐 Vercel Deployment
 
-### 4. Configure Environment Variables
+### Prerequisites
+- Vercel account (free tier available)
+- MongoDB Atlas account
+- GitHub repository
 
-The `.env` file is already created with default values:
-- `PORT=3000` - Backend server port
-- `MONGODB_URI=mongodb://localhost:27017/expense-tracker` - MongoDB connection string
+### Deployment Steps
 
-You can modify these values if needed.
+1. **Push code to GitHub**
+   ```bash
+   git add .
+   git commit -m "Ready for Vercel deployment"
+   git push
+   ```
 
-### 5. Start MongoDB
+2. **Import to Vercel**
+   - Go to https://vercel.com
+   - Click "Add New..." → "Project"
+   - Import your GitHub repository
 
-Make sure MongoDB is running on your system. If you have MongoDB installed locally, start it with:
+3. **Configure Project**
+   - **Root Directory**: `client`
+   - **Build Command**: `npm run build` (or leave blank)
+   - **Output Directory**: `dist/expense-tracker-client` (or leave blank)
 
-**Windows:**
-```bash
-mongod
-```
+4. **Add Environment Variable**
+   - Go to Settings → Environment Variables
+   - Add:
+     - **Key**: `MONGODB_URI`
+     - **Value**: Your MongoDB connection string
+     - **Environment**: All (Production, Preview, Development)
 
-**macOS/Linux:**
-```bash
-sudo systemctl start mongod
-```
+5. **Deploy**
+   - Click "Deploy"
+   - Wait for deployment to complete
 
-## Running the Application
+**See `VERCEL_DEPLOYMENT_COMPLETE.md` for detailed instructions.**
 
-### Option 1: Run Backend and Frontend Separately
-
-**Terminal 1 - Start Backend Server:**
-```bash
-npm run dev
-```
-The backend will run on `http://localhost:3000`
-
-**Terminal 2 - Start Angular Frontend:**
-```bash
-cd client
-npm start
-```
-The frontend will run on `http://localhost:4200`
-
-### Option 2: Run Backend Only (for development)
-
-```bash
-npm start
-```
-
-Then manually start the Angular app:
-```bash
-cd client
-ng serve
-```
-
-## API Endpoints
+## 📡 API Endpoints
 
 ### Expenses
+- `GET /api/expenses` - Get all expenses
+- `GET /api/expenses/:id` - Get single expense
+- `POST /api/expenses` - Create new expense
+- `PUT /api/expenses/:id` - Update expense
+- `DELETE /api/expenses/:id` - Delete expense
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/expenses` | Get all expenses |
-| GET | `/api/expenses/:id` | Get single expense |
-| POST | `/api/expenses` | Create new expense |
-| PUT | `/api/expenses/:id` | Update expense |
-| DELETE | `/api/expenses/:id` | Delete expense |
-| GET | `/api/expenses/stats/total` | Get total expenses |
-| GET | `/api/expenses/stats/category` | Get expenses by category |
+### Statistics
+- `GET /api/expenses/stats/total` - Get total expenses
+- `GET /api/expenses/stats/category` - Get expenses by category
 
-### Example Request Body (POST/PUT)
+### Test
+- `GET /api/test` - Test API connectivity
 
-```json
-{
-  "title": "Grocery Shopping",
-  "amount": 75.50,
-  "category": "Food",
-  "date": "2024-10-22",
-  "description": "Weekly groceries from supermarket"
-}
-```
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 expense-tracker/
-├── client/                    # Angular frontend
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── components/   # Angular components
-│   │   │   │   ├── dashboard/
-│   │   │   │   ├── expense-form/
-│   │   │   │   └── expense-list/
-│   │   │   ├── models/       # TypeScript interfaces
-│   │   │   ├── services/     # Angular services
-│   │   │   ├── app.component.*
-│   │   │   ├── app.module.ts
-│   │   │   └── app-routing.module.ts
-│   │   ├── index.html
-│   │   ├── main.ts
-│   │   └── styles.css
-│   ├── angular.json
-│   ├── package.json
-│   └── tsconfig.json
-├── config/                    # Backend configuration
-│   └── database.js           # MongoDB connection
-├── models/                    # Mongoose models
-│   └── Expense.js
-├── routes/                    # Express routes
-│   └── expenses.js
-├── .gitignore
-├── package.json
-├── README.md
-└── server.js                 # Express server entry point
+├── api/                    # Vercel serverless functions
+│   ├── db.js              # MongoDB connection
+│   ├── test.js            # Test endpoint
+│   └── expenses/          # Expense API routes
+├── client/                 # Angular frontend
+│   └── src/
+│       ├── app/
+│       │   ├── components/
+│       │   ├── services/
+│       │   └── models/
+│       └── environments/
+├── models/                 # Mongoose models
+├── routes/                 # Express routes (local dev)
+├── config/                 # Configuration
+├── vercel.json            # Vercel configuration
+└── package.json           # Dependencies
 ```
 
-## Usage Guide
+## 🎯 Usage
 
 ### Adding an Expense
-
-1. Click the "Add New Expense" button
-2. Fill in the expense details:
-   - Title (required)
-   - Amount (required)
-   - Category (required)
-   - Date (required)
-   - Description (optional)
-3. Click "Add Expense"
+1. Click "Add New Expense"
+2. Fill in: Title, Amount, Category, Date
+3. Optionally add description
+4. Click "Add Expense"
 
 ### Editing an Expense
-
 1. Find the expense in the list
-2. Click the "Edit" button
-3. Modify the details
+2. Click "Edit"
+3. Modify details
 4. Click "Update Expense"
 
 ### Deleting an Expense
-
 1. Find the expense in the list
-2. Click the "Delete" button
-3. Confirm the deletion
+2. Click "Delete"
+3. Confirm deletion
 
-### Viewing Statistics
+## 🔧 Configuration
 
-- **Total Expenses**: Displayed at the top showing the sum of all expenses
-- **Total Transactions**: Shows the number of expense entries
-- **Category Breakdown**: View expenses grouped by category with totals
+### Environment Variables
 
-## Customization
-
-### Adding New Categories
-
-Edit the category array in:
-1. **Backend**: `models/Expense.js` - Update the `enum` array
-2. **Frontend**: `client/src/app/components/expense-form/expense-form.component.ts` - Update the `categories` array
-
-### Changing Colors
-
-Modify the color scheme in:
-- `client/src/styles.css` - Global styles
-- Component-specific CSS files for individual components
-
-### Changing API Port
-
-Update the `PORT` in `.env` file and the API URL in:
-`client/src/app/services/expense.service.ts`
-
-## Troubleshooting
-
-### MongoDB Connection Error
-
-- Ensure MongoDB is running
-- Check the `MONGODB_URI` in `.env` file
-- Verify MongoDB is accessible on the specified port
-
-### Port Already in Use
-
-- Change the `PORT` in `.env` file
-- Or kill the process using the port:
-  - Windows: `netstat -ano | findstr :3000` then `taskkill /PID <PID> /F`
-  - macOS/Linux: `lsof -ti:3000 | xargs kill -9`
-
-### Angular CLI Not Found
-
-Install Angular CLI globally:
-```bash
-npm install -g @angular/cli
+**Local Development (.env file):**
+```
+PORT=3000
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database
 ```
 
-## Future Enhancements
+**Vercel:**
+- Add `MONGODB_URI` in Vercel Settings → Environment Variables
 
-- 📱 User authentication and authorization
-- 📊 Advanced charts and visualizations
-- 📅 Date range filtering
-- 💱 Multi-currency support
-- 📤 Export to CSV/PDF
-- 🔍 Search and filter functionality
-- 📱 Mobile-responsive improvements
+## 🐛 Troubleshooting
 
-## License
+### Backend not connecting
+- Check MongoDB Atlas network access (allow 0.0.0.0/0)
+- Verify connection string is correct
+- Check internet connection
+
+### Vercel deployment issues
+- Verify `MONGODB_URI` environment variable is set
+- Check Root Directory is set to `client`
+- Review build logs in Vercel dashboard
+
+### API errors
+- Check Vercel Function Logs
+- Verify MongoDB connection string
+- Test `/api/test` endpoint first
+
+## 📝 License
 
 ISC
 
-## Contributing
+## 👤 Author
 
-Feel free to fork this project and submit pull requests for any improvements.
+Raos0nu
 
-## Support
+## 🙏 Acknowledgments
 
-For issues and questions, please create an issue in the repository.
+- MongoDB Atlas for free cloud database
+- Vercel for free hosting
+- Angular and Express.js communities
 
+---
 
+**For detailed Vercel deployment instructions, see `VERCEL_DEPLOYMENT_COMPLETE.md`**

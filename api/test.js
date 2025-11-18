@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
   res.status(200).json({ 
     message: 'API is working!',
     method: req.method,
-    env: process.env.MONGODB_URI ? 'MongoDB URI is set' : 'MongoDB URI is NOT set'
+    env: process.env.MONGODB_URI ? 'MongoDB URI is set' : 'MongoDB URI is NOT set',
+    timestamp: new Date().toISOString()
   });
 };
-

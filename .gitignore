@@ -7,3 +7,4 @@ client/dist/
 .DS_Store
 .vercel
 client/.angular/
+*.cache

@@ -1,7 +1,7 @@
 {
   "name": "expense-tracker",
   "version": "1.0.0",
-  "description": "Expense Tracker using MEAN stack",
+  "description": "Expense Tracker using MEAN stack - Fully configured for Vercel deployment",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -17,7 +17,8 @@
     "MongoDB",
     "Express",
     "Angular",
-    "Node"
+    "Node",
+    "Vercel"
   ],
   "author": "",
   "license": "ISC",

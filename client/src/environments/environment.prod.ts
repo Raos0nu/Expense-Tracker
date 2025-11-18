@@ -3,4 +3,3 @@ export const environment = {
   // Using relative URL for Vercel serverless functions
   apiUrl: '/api/expenses'
 };
-
