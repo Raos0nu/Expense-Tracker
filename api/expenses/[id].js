@@ -2,7 +2,7 @@ const connectDB = require('../db');
 const Expense = require('../../models/Expense');
 
 module.exports = async (req, res) => {
-  // Enable CORS
+  // Enable CORS - Must be first
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -11,6 +11,7 @@ module.exports = async (req, res) => {
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   );
 
+  // Handle preflight
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
@@ -23,6 +24,7 @@ module.exports = async (req, res) => {
   }
 
   try {
+    // Connect to database
     await connectDB();
 
     // GET single expense
@@ -41,11 +43,12 @@ module.exports = async (req, res) => {
         return res.status(404).json({ message: 'Expense not found' });
       }
 
-      if (req.body.title !== undefined) expense.title = req.body.title.trim();
-      if (req.body.amount !== undefined) expense.amount = parseFloat(req.body.amount);
-      if (req.body.category !== undefined) expense.category = req.body.category;
-      if (req.body.date !== undefined) expense.date = new Date(req.body.date);
-      if (req.body.description !== undefined) expense.description = req.body.description.trim();
+      const body = req.body || {};
+      if (body.title !== undefined) expense.title = String(body.title).trim();
+      if (body.amount !== undefined) expense.amount = parseFloat(body.amount);
+      if (body.category !== undefined) expense.category = String(body.category);
+      if (body.date !== undefined) expense.date = new Date(body.date);
+      if (body.description !== undefined) expense.description = String(body.description).trim();
 
       const updatedExpense = await expense.save();
       return res.status(200).json(updatedExpense);
@@ -61,12 +64,13 @@ module.exports = async (req, res) => {
       return res.status(200).json({ message: 'Expense deleted successfully' });
     }
 
-    res.status(405).json({ message: 'Method not allowed' });
+    // Method not allowed
+    res.status(405).json({ message: `Method ${req.method} not allowed` });
   } catch (error) {
     console.error('API Error:', error);
     res.status(500).json({ 
       message: error.message || 'Internal server error',
-      error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      error: error.name || 'Unknown error'
     });
   }
 };
