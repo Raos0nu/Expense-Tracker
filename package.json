@@ -28,6 +28,9 @@
     "express": "^4.18.2",
     "mongoose": "^7.5.0"
   },
+  "engines": {
+    "node": "18.x"
+  },
   "devDependencies": {
     "nodemon": "^3.0.1"
   }

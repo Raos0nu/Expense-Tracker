@@ -10,7 +10,9 @@ import { environment } from '../../environments/environment';
 export class ExpenseService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    console.log('ExpenseService initialized with API URL:', this.apiUrl);
+  }
 
   getAllExpenses(): Observable<Expense[]> {
     return this.http.get<Expense[]>(this.apiUrl);

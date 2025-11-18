@@ -42,26 +42,39 @@ export class ExpenseFormComponent implements OnInit {
   onSubmit(): void {
     if (this.expenseForm.valid) {
       const expenseData: Expense = this.expenseForm.value;
+      console.log('Submitting expense:', expenseData); // Debug log
 
       if (this.isEditing && this.expense?._id) {
         this.expenseService.updateExpense(this.expense._id, expenseData).subscribe({
-          next: () => {
+          next: (response) => {
+            console.log('Expense updated successfully:', response);
             this.onSave.emit();
           },
           error: (error) => {
             console.error('Error updating expense:', error);
+            alert('Error updating expense. Check console for details.');
           }
         });
       } else {
         this.expenseService.createExpense(expenseData).subscribe({
-          next: () => {
+          next: (response) => {
+            console.log('Expense created successfully:', response);
             this.onSave.emit();
           },
           error: (error) => {
             console.error('Error creating expense:', error);
+            console.error('Full error details:', JSON.stringify(error, null, 2));
+            alert('Error creating expense. Check console for details. Make sure backend is running!');
           }
         });
       }
+    } else {
+      console.log('Form is invalid:', this.expenseForm.errors);
+      console.log('Form values:', this.expenseForm.value);
+      // Mark all fields as touched to show validation errors
+      Object.keys(this.expenseForm.controls).forEach(key => {
+        this.expenseForm.get(key)?.markAsTouched();
+      });
     }
   }
 
