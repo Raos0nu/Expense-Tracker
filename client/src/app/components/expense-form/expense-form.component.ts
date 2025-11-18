@@ -64,7 +64,23 @@ export class ExpenseFormComponent implements OnInit {
           error: (error) => {
             console.error('Error creating expense:', error);
             console.error('Full error details:', JSON.stringify(error, null, 2));
-            alert('Error creating expense. Check console for details. Make sure backend is running!');
+            
+            // Better error message
+            let errorMessage = 'Error creating expense. ';
+            if (error.error && error.error.message) {
+              errorMessage += error.error.message;
+            } else if (error.message) {
+              errorMessage += error.message;
+            } else {
+              errorMessage += 'Please check the console for details.';
+            }
+            
+            // Check if it's a connection error
+            if (error.status === 0 || error.message?.includes('Failed to fetch')) {
+              errorMessage += '\n\nPossible issues:\n- Backend API is not accessible\n- Check Vercel function logs\n- Verify MONGODB_URI environment variable is set';
+            }
+            
+            alert(errorMessage);
           }
         });
       }

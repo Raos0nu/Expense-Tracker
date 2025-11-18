@@ -10,7 +10,9 @@ async function connectDB() {
   const MONGODB_URI = process.env.MONGODB_URI;
 
   if (!MONGODB_URI) {
-    throw new Error('Please define the MONGODB_URI environment variable');
+    const error = new Error('MONGODB_URI environment variable is not defined. Please add it in Vercel Settings → Environment Variables.');
+    console.error('MongoDB Connection Error:', error.message);
+    throw error;
   }
 
   if (cached.conn) {
@@ -26,7 +28,7 @@ async function connectDB() {
       console.log('MongoDB connected successfully');
       return mongoose;
     }).catch((error) => {
-      console.error('MongoDB connection error:', error);
+      console.error('MongoDB connection error:', error.message);
       cached.promise = null;
       throw error;
     });
