@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "cd client && npm install && npm run build",
-  "outputDirectory": "client/dist/expense-tracker-client",
-  "installCommand": "npm install && cd client && npm install",
+  "buildCommand": "npm install && npm run build",
+  "outputDirectory": "dist/expense-tracker-client",
+  "installCommand": "npm install",
   "framework": null,
   "rewrites": [
     {
