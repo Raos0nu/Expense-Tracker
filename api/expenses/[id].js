@@ -2,10 +2,6 @@ const connectDB = require('../db');
 const Expense = require('../../models/Expense');
 
 module.exports = async (req, res) => {
-  // Vercel automatically parses JSON body, but ensure it exists
-  if (!req.body && req.method === 'PUT') {
-    req.body = {};
-  }
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,6 +17,10 @@ module.exports = async (req, res) => {
   }
 
   const { id } = req.query;
+
+  if (!id) {
+    return res.status(400).json({ message: 'Expense ID is required' });
+  }
 
   try {
     await connectDB();
@@ -41,11 +41,11 @@ module.exports = async (req, res) => {
         return res.status(404).json({ message: 'Expense not found' });
       }
 
-      if (req.body.title) expense.title = req.body.title;
-      if (req.body.amount) expense.amount = req.body.amount;
-      if (req.body.category) expense.category = req.body.category;
-      if (req.body.date) expense.date = req.body.date;
-      if (req.body.description !== undefined) expense.description = req.body.description;
+      if (req.body.title !== undefined) expense.title = req.body.title.trim();
+      if (req.body.amount !== undefined) expense.amount = parseFloat(req.body.amount);
+      if (req.body.category !== undefined) expense.category = req.body.category;
+      if (req.body.date !== undefined) expense.date = new Date(req.body.date);
+      if (req.body.description !== undefined) expense.description = req.body.description.trim();
 
       const updatedExpense = await expense.save();
       return res.status(200).json(updatedExpense);
@@ -64,7 +64,9 @@ module.exports = async (req, res) => {
     res.status(405).json({ message: 'Method not allowed' });
   } catch (error) {
     console.error('API Error:', error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ 
+      message: error.message || 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
-
