@@ -102,9 +102,10 @@ git push origin main
 3. **Root Directory**: Leave empty (use project root)
 4. **Build and Output Settings**:
    - Click "Override" next to Build Command
-   - **Build Command**: `cd client && npm install && npm run build`
+   - **Build Command**: `cd client && npm install && npm run build -- --configuration production`
    - **Output Directory**: `client/dist/expense-tracker-client`
    - **Install Command**: `npm install && cd client && npm install`
+   - **Node.js Version**: 18.x (or leave default)
 
 ### Step 5: Add Environment Variable
 1. Before deploying, click "Environment Variables" section
@@ -112,7 +113,9 @@ git push origin main
 3. Add your MongoDB connection:
    - **Key**: `MONGODB_URI`
    - **Value**: Your MongoDB Atlas connection string
-     - Example: `mongodb+srv://username:password@cluster.mongodb.net/expense-tracker`
+     - Format: `mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database-name>?retryWrites=true&w=majority`
+     - Example: `mongodb+srv://myuser:mypassword123@cluster0.abc123.mongodb.net/expense-tracker?retryWrites=true&w=majority`
+     - **Important**: Replace `<username>`, `<password>`, `<cluster>`, and `<database-name>` with your actual values
    - **Environment**: Select all three:
      - ☑ Production
      - ☑ Preview  
@@ -135,13 +138,32 @@ Once deployment completes:
 
 ### Step 8: Set Up MongoDB Atlas (If Not Done)
 1. Go to https://cloud.mongodb.com
-2. Create a free cluster (if you don't have one)
-3. Go to "Database Access" → Add database user
-4. Go to "Network Access" → Add IP Address: `0.0.0.0/0` (allow all)
-5. Go to "Database" → Click "Connect" → "Connect your application"
-6. Copy the connection string
-7. Replace `<password>` with your database password
-8. Use this string as `MONGODB_URI` in Vercel
+2. Sign in or create account
+3. Create a free cluster (M0 Free tier)
+4. **Database Access**:
+   - Go to "Database Access" → "Add New Database User"
+   - Authentication Method: Password
+   - Username: Create a username (e.g., `expenseuser`)
+   - Password: Create a strong password (save it!)
+   - Database User Privileges: "Read and write to any database"
+   - Click "Add User"
+5. **Network Access**:
+   - Go to "Network Access" → "Add IP Address"
+   - Click "Allow Access from Anywhere"
+   - IP Address: `0.0.0.0/0`
+   - Click "Confirm"
+6. **Get Connection String**:
+   - Go to "Database" → Click "Connect" on your cluster
+   - Select "Connect your application"
+   - Driver: Node.js, Version: 5.5 or later
+   - Copy the connection string
+   - It will look like: `mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority`
+7. **Format the Connection String**:
+   - Replace `<username>` with your database username
+   - Replace `<password>` with your database password (URL encode special characters)
+   - Add database name: Change `/?retryWrites` to `/expense-tracker?retryWrites`
+   - Final format: `mongodb+srv://expenseuser:yourpassword@cluster0.xxxxx.mongodb.net/expense-tracker?retryWrites=true&w=majority`
+8. Use this complete string as `MONGODB_URI` value in Vercel
 
 ### Troubleshooting
 
