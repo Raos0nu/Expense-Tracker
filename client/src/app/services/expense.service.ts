@@ -14,8 +14,22 @@ export class ExpenseService {
     console.log('ExpenseService initialized with API URL:', this.apiUrl);
   }
 
-  getAllExpenses(): Observable<Expense[]> {
-    return this.http.get<Expense[]>(this.apiUrl);
+  getAllExpenses(filters?: {
+    startDate?: string;
+    endDate?: string;
+    category?: string;
+    search?: string;
+  }): Observable<Expense[]> {
+    let params: any = {};
+    if (filters) {
+      if (filters.startDate) params.startDate = filters.startDate;
+      if (filters.endDate) params.endDate = filters.endDate;
+      if (filters.category) params.category = filters.category;
+      if (filters.search) params.search = filters.search;
+    }
+    const queryString = new URLSearchParams(params).toString();
+    const url = queryString ? `${this.apiUrl}?${queryString}` : this.apiUrl;
+    return this.http.get<Expense[]>(url);
   }
 
   getExpenseById(id: string): Observable<Expense> {
@@ -34,12 +48,36 @@ export class ExpenseService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  getTotalExpenses(): Observable<{ total: number }> {
-    return this.http.get<{ total: number }>(`${this.apiUrl}/stats/total`);
+  getTotalExpenses(filters?: {
+    startDate?: string;
+    endDate?: string;
+  }): Observable<{ total: number }> {
+    let params: any = {};
+    if (filters) {
+      if (filters.startDate) params.startDate = filters.startDate;
+      if (filters.endDate) params.endDate = filters.endDate;
+    }
+    const queryString = new URLSearchParams(params).toString();
+    const url = queryString ? `${this.apiUrl}/stats/total?${queryString}` : `${this.apiUrl}/stats/total`;
+    return this.http.get<{ total: number }>(url);
   }
 
-  getCategoryStats(): Observable<CategoryStats[]> {
-    return this.http.get<CategoryStats[]>(`${this.apiUrl}/stats/category`);
+  getCategoryStats(filters?: {
+    startDate?: string;
+    endDate?: string;
+  }): Observable<CategoryStats[]> {
+    let params: any = {};
+    if (filters) {
+      if (filters.startDate) params.startDate = filters.startDate;
+      if (filters.endDate) params.endDate = filters.endDate;
+    }
+    const queryString = new URLSearchParams(params).toString();
+    const url = queryString ? `${this.apiUrl}/stats/category?${queryString}` : `${this.apiUrl}/stats/category`;
+    return this.http.get<CategoryStats[]>(url);
+  }
+
+  getTrends(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/stats/trends`);
   }
 }
 

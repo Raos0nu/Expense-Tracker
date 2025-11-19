@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Expense } from '../../models/expense.model';
+import { formatInr } from '../../utils/currency.util';
 
 @Component({
   selector: 'app-expense-list',
@@ -10,6 +11,9 @@ export class ExpenseListComponent {
   @Input() expenses: Expense[] = [];
   @Output() onEdit = new EventEmitter<Expense>();
   @Output() onDelete = new EventEmitter<string>();
+
+  // Currency formatting function
+  formatInr = formatInr;
 
   editExpense(expense: Expense): void {
     this.onEdit.emit(expense);

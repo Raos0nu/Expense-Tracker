@@ -76,42 +76,42 @@ A full-stack expense tracking application built with MongoDB, Express.js, Angula
 
 ## 🌐 Vercel Deployment
 
-### Prerequisites
-- Vercel account (free tier available)
-- MongoDB Atlas account
-- GitHub repository
+### Step 1: Push to GitHub
+```bash
+git add .
+git commit -m "Deploy to Vercel"
+git push origin main
+```
 
-### Deployment Steps
+### Step 2: Create Vercel Project
+1. Go to https://vercel.com
+2. Click "Add New Project"
+3. Import your GitHub repository
+4. Click "Import"
 
-1. **Push code to GitHub**
-   ```bash
-   git add .
-   git commit -m "Ready for Vercel deployment"
-   git push
-   ```
+### Step 3: Configure Build Settings
+- **Framework Preset**: Other
+- **Root Directory**: Leave empty
+- **Build Command**: `cd client && npm install && npm run build`
+- **Output Directory**: `client/dist/expense-tracker-client`
+- **Install Command**: `npm install && cd client && npm install`
 
-2. **Import to Vercel**
-   - Go to https://vercel.com
-   - Click "Add New..." → "Project"
-   - Import your GitHub repository
+### Step 4: Add Environment Variable
+1. Go to Settings → Environment Variables
+2. Add variable:
+   - **Key**: `MONGODB_URI`
+   - **Value**: Your MongoDB connection string
+   - **Environment**: Production, Preview, Development (select all)
+3. Click "Save"
 
-3. **Configure Project**
-   - **Root Directory**: `client`
-   - **Build Command**: `npm run build` (or leave blank)
-   - **Output Directory**: `dist/expense-tracker-client` (or leave blank)
+### Step 5: Deploy
+1. Click "Deploy"
+2. Wait for build to complete
+3. Your app will be live at: `https://your-project.vercel.app`
 
-4. **Add Environment Variable**
-   - Go to Settings → Environment Variables
-   - Add:
-     - **Key**: `MONGODB_URI`
-     - **Value**: Your MongoDB connection string
-     - **Environment**: All (Production, Preview, Development)
-
-5. **Deploy**
-   - Click "Deploy"
-   - Wait for deployment to complete
-
-**See `VERCEL_DEPLOYMENT_COMPLETE.md` for detailed instructions.**
+### Step 6: Verify Deployment
+- Frontend: `https://your-project.vercel.app`
+- API: `https://your-project.vercel.app/api/expenses`
 
 ## 📡 API Endpoints
 

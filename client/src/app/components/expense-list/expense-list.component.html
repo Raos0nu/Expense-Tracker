@@ -16,7 +16,7 @@
             {{ expense.category }}
           </span>
         </div>
-        <div class="expense-amount">${{ expense.amount.toFixed(2) }}</div>
+        <div class="expense-amount">{{ formatInr(expense.amount) }}</div>
       </div>
       
       <div class="expense-details">

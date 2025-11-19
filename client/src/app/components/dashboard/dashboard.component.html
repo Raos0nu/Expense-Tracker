@@ -1,13 +1,107 @@
 <div class="dashboard">
+  <!-- Header Actions -->
+  <div class="card header-actions">
+    <div class="actions-row">
+      <div class="search-filter-section">
+        <input 
+          type="text" 
+          class="form-control search-input" 
+          placeholder="Search expenses..." 
+          [(ngModel)]="searchQuery"
+          (input)="applyFilters()">
+        <select class="form-control filter-select" [(ngModel)]="selectedCategory" (change)="applyFilters()">
+          <option value="">All Categories</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+        <select class="form-control filter-select" [(ngModel)]="dateRange" (change)="applyDateRange()">
+          <option value="all">All Time</option>
+          <option value="today">Today</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+          <option value="custom">Custom Range</option>
+        </select>
+        <button class="btn btn-secondary" (click)="toggleDarkMode()" title="Toggle Dark Mode">
+          {{ isDarkMode ? '☀️' : '🌙' }}
+        </button>
+        <button class="btn btn-success" (click)="exportToCSV()" *ngIf="expenses.length > 0">
+          📥 Export CSV
+        </button>
+      </div>
+    </div>
+    <div class="custom-date-range" *ngIf="dateRange === 'custom'">
+      <input type="date" class="form-control" [(ngModel)]="startDate" (change)="applyFilters()">
+      <span>to</span>
+      <input type="date" class="form-control" [(ngModel)]="endDate" (change)="applyFilters()">
+    </div>
+  </div>
+
   <!-- Stats Section -->
   <div class="stats-container">
-    <div class="stat-card">
-      <h3>Total Expenses</h3>
-      <p class="stat-value">${{ totalExpenses.toFixed(2) }}</p>
+    <div class="stat-card stat-card-primary">
+      <h3>Initial Fund</h3>
+      <p class="stat-value">{{ formatInr(initialFund) }}</p>
+      <button class="btn btn-small btn-white" (click)="onSetInitialFund()" *ngIf="!showFundForm">
+        Set/Update Fund
+      </button>
     </div>
-    <div class="stat-card">
+    <div class="stat-card stat-card-danger">
+      <h3>Total Expenses</h3>
+      <p class="stat-value">{{ formatInr(totalExpenses) }}</p>
+    </div>
+    <div class="stat-card" [ngClass]="{'stat-card-success': remainingBalance >= 0, 'stat-card-warning': remainingBalance < 0}">
+      <h3>Remaining Balance</h3>
+      <p class="stat-value">{{ formatInr(remainingBalance) }}</p>
+    </div>
+    <div class="stat-card stat-card-info">
       <h3>Total Transactions</h3>
       <p class="stat-value">{{ expenses.length }}</p>
+    </div>
+  </div>
+
+  <!-- Initial Fund Form -->
+  <div class="card" *ngIf="showFundForm">
+    <h2>Set Initial Fund</h2>
+    <div class="fund-form">
+      <div class="form-group">
+        <label for="initialFund">Initial Fund (₹):</label>
+        <input 
+          type="number" 
+          id="initialFund" 
+          class="form-control" 
+          [(ngModel)]="newInitialFund" 
+          min="0" 
+          step="0.01"
+          placeholder="Enter initial fund amount">
+        <p class="form-hint">Amount in Indian Rupees (INR).</p>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" (click)="onSaveInitialFund()">Save</button>
+        <button class="btn btn-secondary" (click)="onCancelFundForm()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="charts-container" *ngIf="categoryStats.length > 0 || expenses.length > 0">
+    <div class="chart-card" *ngIf="categoryStats.length > 0">
+      <h3>Expenses by Category</h3>
+      <div style="height: 250px;">
+        <canvas baseChart
+          [data]="pieChartData"
+          [type]="pieChartType"
+          [options]="pieChartOptions">
+        </canvas>
+      </div>
+    </div>
+    <div class="chart-card" *ngIf="expenses.length > 0">
+      <h3>Expenses Over Time</h3>
+      <div style="height: 250px;">
+        <canvas baseChart
+          [data]="barChartData"
+          [type]="barChartType"
+          [options]="barChartOptions">
+        </canvas>
+      </div>
     </div>
   </div>
 
@@ -20,7 +114,7 @@
           <span class="category-name">{{ stat._id }}</span>
           <span class="category-count">({{ stat.count }} transactions)</span>
         </div>
-        <span class="category-amount">${{ stat.total.toFixed(2) }}</span>
+        <span class="category-amount">{{ formatInr(stat.total) }}</span>
       </div>
     </div>
   </div>

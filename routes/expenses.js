@@ -2,10 +2,36 @@ const express = require('express');
 const router = express.Router();
 const Expense = require('../models/Expense');
 
-// Get all expenses
+// Get all expenses with optional filters
 router.get('/', async (req, res) => {
   try {
-    const expenses = await Expense.find().sort({ date: -1 });
+    let query = {};
+    
+    // Date range filter
+    if (req.query.startDate || req.query.endDate) {
+      query.date = {};
+      if (req.query.startDate) {
+        query.date.$gte = new Date(req.query.startDate);
+      }
+      if (req.query.endDate) {
+        query.date.$lte = new Date(req.query.endDate);
+      }
+    }
+    
+    // Category filter
+    if (req.query.category) {
+      query.category = req.query.category;
+    }
+    
+    // Search filter
+    if (req.query.search) {
+      query.$or = [
+        { title: { $regex: req.query.search, $options: 'i' } },
+        { description: { $regex: req.query.search, $options: 'i' } }
+      ];
+    }
+    
+    const expenses = await Expense.find(query).sort({ date: -1 });
     res.json(expenses);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -82,7 +108,15 @@ router.delete('/:id', async (req, res) => {
 // Get total expenses
 router.get('/stats/total', async (req, res) => {
   try {
+    let query = {};
+    if (req.query.startDate || req.query.endDate) {
+      query.date = {};
+      if (req.query.startDate) query.date.$gte = new Date(req.query.startDate);
+      if (req.query.endDate) query.date.$lte = new Date(req.query.endDate);
+    }
+    
     const result = await Expense.aggregate([
+      { $match: query },
       {
         $group: {
           _id: null,
@@ -99,7 +133,15 @@ router.get('/stats/total', async (req, res) => {
 // Get expenses by category
 router.get('/stats/category', async (req, res) => {
   try {
+    let query = {};
+    if (req.query.startDate || req.query.endDate) {
+      query.date = {};
+      if (req.query.startDate) query.date.$gte = new Date(req.query.startDate);
+      if (req.query.endDate) query.date.$lte = new Date(req.query.endDate);
+    }
+    
     const result = await Expense.aggregate([
+      { $match: query },
       {
         $group: {
           _id: '$category',
@@ -109,6 +151,33 @@ router.get('/stats/category', async (req, res) => {
       },
       {
         $sort: { total: -1 }
+      }
+    ]);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get monthly trends
+router.get('/stats/trends', async (req, res) => {
+  try {
+    const result = await Expense.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { $year: '$date' },
+            month: { $month: '$date' }
+          },
+          total: { $sum: '$amount' },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { '_id.year': 1, '_id.month': 1 }
+      },
+      {
+        $limit: 12
       }
     ]);
     res.json(result);
