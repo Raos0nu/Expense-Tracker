@@ -31,7 +31,7 @@
     "mongoose": "^7.5.0"
   },
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
