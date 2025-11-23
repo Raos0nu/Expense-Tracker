@@ -13,11 +13,6 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ],
-  "functions": {
-    "api/index.js": {
-      "runtime": "nodejs22.x"
-    }
-  }
+  ]
 }
 
