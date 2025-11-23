@@ -1,11 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node"
-    }
-  ],
+  "buildCommand": "cd client && npm install && npm run build -- --configuration production",
+  "outputDirectory": "client/dist/expense-tracker-client",
+  "installCommand": "npm install && cd client && npm install",
+  "framework": null,
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -13,8 +11,13 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/client/$1"
+      "destination": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/index.js": {
+      "runtime": "nodejs18.x"
+    }
+  }
 }
 

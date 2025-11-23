@@ -4,11 +4,25 @@ const bodyParser = require('body-parser');
 const connectDB = require('../config/database');
 const expenseRoutes = require('../routes/expenses');
 const fundRoutes = require('../routes/fund');
+const budgetRoutes = require('../routes/budget');
 
 const app = express();
 
-// Connect to database
-connectDB();
+// Connect to database (only once, cached for serverless)
+let isConnected = false;
+const connectOnce = async () => {
+  if (!isConnected) {
+    try {
+      await connectDB();
+      isConnected = true;
+    } catch (error) {
+      console.error('Database connection error:', error);
+    }
+  }
+};
+
+// Initialize connection
+connectOnce();
 
 // Middleware
 app.use(cors());
@@ -18,9 +32,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routes
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/fund', fundRoutes);
-
-// Budget routes
-const budgetRoutes = require('../routes/budget');
 app.use('/api/budget', budgetRoutes);
 
 // Root route
@@ -28,6 +39,10 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Expense Tracker API' });
 });
 
-// Export for Vercel
-module.exports = app;
+// Vercel serverless function handler
+module.exports = async (req, res) => {
+  // Ensure database is connected
+  await connectOnce();
+  return app(req, res);
+};
 
