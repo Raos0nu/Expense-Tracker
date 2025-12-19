@@ -15,21 +15,21 @@ const connectOnce = async () => {
     try {
       await connectDB();
       isConnected = true;
+      console.log('Database connected successfully');
     } catch (error) {
       console.error('Database connection error:', error);
+      isConnected = false;
+      throw error;
     }
   }
 };
-
-// Initialize connection
-connectOnce();
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Routes
+// Routes - keep /api prefix since vercel.json rewrite preserves the path
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/fund', fundRoutes);
 app.use('/api/budget', budgetRoutes);
@@ -41,8 +41,19 @@ app.get('/', (req, res) => {
 
 // Vercel serverless function handler
 module.exports = async (req, res) => {
-  // Ensure database is connected
-  await connectOnce();
-  return app(req, res);
+  try {
+    // Ensure database is connected
+    await connectOnce();
+    // Handle the request with Express
+    app(req, res);
+  } catch (error) {
+    console.error('Serverless function error:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ 
+        error: 'Internal server error', 
+        message: error.message 
+      });
+    }
+  }
 };
 
